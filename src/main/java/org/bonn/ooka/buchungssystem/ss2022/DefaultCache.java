@@ -3,7 +3,7 @@ package org.bonn.ooka.buchungssystem.ss2022;
 import java.util.HashMap;
 import java.util.List;
 
-public class defaultCache implements Caching<Hotel>{
+public class DefaultCache implements Caching<Hotel>{
 
     @Override
     public void cache(HashMap<String, List<Hotel>> data) {
