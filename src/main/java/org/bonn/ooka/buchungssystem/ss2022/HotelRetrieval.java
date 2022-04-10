@@ -7,6 +7,13 @@ import java.util.List;
 public class HotelRetrieval {
 
     private static DBAccess access;
+    private Caching cache;
+
+    public HotelRetrieval(Caching cache){
+        this.cache = cache;
+    }
+    public HotelRetrieval(){
+    }
 
     public Hotel[] getHotelByName(String name) {
         openSession();

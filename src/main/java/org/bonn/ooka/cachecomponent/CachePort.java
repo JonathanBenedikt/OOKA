@@ -1,22 +1,24 @@
 package org.bonn.ooka.cachecomponent;
+import org.bonn.ooka.buchungssystem.ss2022.Caching;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class CachePort<C> implements Caching<C> {
-    private Cache<C> storage;
+    private Cache<C> cache;
 
     @Override
-    public void cache(List<C> data) {
-        this.storage.cache(data);
+    public void cache(HashMap<String, List<C>> data) {
+        this.cache.cache(data);
     }
 
     @Override
     public void clear() {
-        this.storage.clear();
+        this.cache.clear();
     }
 
     @Override
-    public List<C> load() {
-        return this.storage.load();
+    public HashMap<String, List<C>> load() {
+        return this.cache.load();
     }
 }

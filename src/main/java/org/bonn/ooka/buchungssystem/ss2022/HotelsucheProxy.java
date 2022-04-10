@@ -1,8 +1,14 @@
 package org.bonn.ooka.buchungssystem.ss2022;
 
 public class HotelsucheProxy implements Hotelsuche{
-
     private HotelRetrieval retrieval;
+
+    public HotelsucheProxy(Caching cache){
+        this.retrieval = new HotelRetrieval(cache);
+    }
+    public HotelsucheProxy(){
+        this.retrieval = new HotelRetrieval();
+    }
 
     @Override
     public Hotel[] getHotelByName(String name) {

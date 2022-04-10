@@ -5,6 +5,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import org.bonn.ooka.cachecomponent.*;
 
 public class DBAccess {
 	
@@ -49,7 +50,11 @@ public class DBAccess {
 		*/
 
 
-		HotelsucheProxy proxy = new HotelsucheProxy();
+		//Cachetest
+		CachePort<Hotel> hotelcache = new CachePort<>();
+
+
+		HotelsucheProxy proxy = new HotelsucheProxy(hotelcache);
 		Hotel[] hotel = proxy.getHotelByName("Jahres");
 		for(Hotel h : hotel)
 		{
@@ -57,6 +62,8 @@ public class DBAccess {
 			System.out.println(h.hotelname);
 			System.out.println(h.ort);
 		}
+
+		//TODO Cachingzugriff sinnvoll ergänzen
 
 	}
 	
