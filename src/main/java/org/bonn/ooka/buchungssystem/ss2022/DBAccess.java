@@ -21,6 +21,7 @@ public class DBAccess {
 	} 
 
 	public static void main(String[] args) {
+		/*
 		DBAccess acc = new DBAccess();
 		System.out.println("Mini-Tutorial der Klasse DBAccess" );
 		System.out.println("c/o Sascha Alda, 2019 - 2022" );
@@ -45,6 +46,17 @@ public class DBAccess {
 		System.out.println("\nDann MUSS ein externer Client mit der Methode closeConnection() die Session explizit schließen!" );
 		acc.closeConnection();
 		// TODO Auto-generated method stub
+		*/
+
+
+		HotelsucheProxy proxy = new HotelsucheProxy();
+		Hotel[] hotel = proxy.getHotelByName("Jahres");
+		for(Hotel h : hotel)
+		{
+			System.out.println(h.id);
+			System.out.println(h.hotelname);
+			System.out.println(h.ort);
+		}
 
 	}
 	

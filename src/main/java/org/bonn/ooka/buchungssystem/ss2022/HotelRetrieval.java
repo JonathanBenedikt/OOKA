@@ -1,25 +1,42 @@
 package org.bonn.ooka.buchungssystem.ss2022;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class HotelRetrieval {
 
     private static DBAccess access;
 
-    public String getHotelByName(String name)
-    {
+    public Hotel[] getHotelByName(String name) {
         openSession();
         // Liste für das Abfragen aller Hotels, die String im Namen besitzen
-        List<String> hotelresult = access.getObjects(DBAccess.HOTEL, name);
-        String resultString = "";
+        List<String> searchResult = access.getObjects(DBAccess.HOTEL, name);
+        ArrayList<Hotel> hotelResult = new ArrayList<>();
 
-        for (String str: hotelresult)
+        try {
+            Iterator<String> it = searchResult.stream().iterator();
+            while(it.hasNext())
+            {
+                Hotel newHotel = new Hotel();
+
+                newHotel.id = Integer.parseInt(it.next());
+                if(it.hasNext())
+                    newHotel.hotelname = it.next();
+                if(it.hasNext())
+                    newHotel.ort = it.next();
+                hotelResult.add(newHotel);
+            }
+            it.remove();
+        } catch (Exception ex)
         {
-            resultString += str+" ";
+            System.out.println(ex);
         }
-        resultString = resultString.substring(0,resultString.length()-1);
 
-        return resultString;
+        Hotel[] hotelResultArray = new Hotel[hotelResult.size()];
+        access.closeConnection();
+
+        return hotelResult.toArray(hotelResultArray);
     }
 
     public void openSession()

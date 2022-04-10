@@ -5,16 +5,17 @@ public class HotelsucheProxy implements Hotelsuche{
     private HotelRetrieval retrieval;
 
     @Override
-    public String getHotelByName(String name) {
+    public Hotel[] getHotelByName(String name) {
+        if(retrieval == null)
+            setRetrieval(new HotelRetrieval());
 
         return retrieval.getHotelByName(name);
     }
 
     @Override
     public void openSession() {
-
-    setRetrieval(new HotelRetrieval());
-    HotelRetrieval retrieval = getRetrieval();
+        if(retrieval == null)
+            setRetrieval(new HotelRetrieval());
 
     retrieval.openSession();
     }
