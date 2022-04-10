@@ -8,10 +8,12 @@ import java.util.List;
 public class HotelRetrieval {
 
     private static DBAccess access;
+    private Hotelsuche search;
     private Caching cache;
 
     public HotelRetrieval(Caching cache){
         this.cache = cache;
+        this.search = new HotelsucheEinfach();
     }
     public HotelRetrieval(){
     }
@@ -26,46 +28,17 @@ public class HotelRetrieval {
         return cache.load();
     }
 
-    public Hotel[] getHotelByName(String name) {
-        openSession();
-        // Liste für das Abfragen aller Hotels, die String im Namen besitzen
-        List<String> searchResult = access.getObjects(DBAccess.HOTEL, name);
-        ArrayList<Hotel> hotelResult = new ArrayList<>();
-
-        try {
-            Iterator<String> it = searchResult.stream().iterator();
-            while(it.hasNext())
-            {
-                Hotel newHotel = new Hotel();
-
-                newHotel.id = Integer.parseInt(it.next());
-                if(it.hasNext())
-                    newHotel.hotelname = it.next();
-                if(it.hasNext())
-                    newHotel.ort = it.next();
-                hotelResult.add(newHotel);
-            }
-            it.remove();
-        } catch (Exception ex)
-        {
-            System.out.println(ex);
+    public void setSearch(String mode){
+        if (mode.equals("einfach")){
+            search = new HotelsucheEinfach();
+        } else if (mode.equals("erweitert")) {
+            search = new HotelsucheErweitert();
         }
-
-        Hotel[] hotelResultArray = new Hotel[hotelResult.size()];
-        access.closeConnection();
-
-        return hotelResult.toArray(hotelResultArray);
     }
-
-
-
-    public void openSession()
-    {
-        if(access == null)
-            access = new DBAccess();
-
-        System.out.println("Es wird versucht eine Verbindung zur Datenbank zu öffnen.");
-        access.openConnection();
-        System.out.println("Verbindungsaufbau zur Datenbank konnte erfolgreich durchgeführt werden.");
+    public void openSession() {
+        search.openSession();
+    }
+    public Hotel[] getHotelByName(String name) {
+        return search.getHotelByName(name);
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.text.SimpleDateFormat;
 
 public class HotelsucheProxy{
-    private Hotelsuche search;
+
     private HotelRetrieval retrieval;
     private SimpleDateFormat dateformatter = new SimpleDateFormat("yyyy-MM-dd 'um' HH:mm:ss z");
 
@@ -15,29 +15,22 @@ public class HotelsucheProxy{
     }
     public HotelsucheProxy(){
         this.retrieval = new HotelRetrieval(new DefaultCache());
-        this.search = new HotelsucheEinfach(this.retrieval);
+
     }
 
     public void setSearch(String mode){
-        //
-        if (mode.equals("einfach")){
-            search = new HotelsucheEinfach(this.retrieval);
-        } else if (mode.equals("erweitert")) {
-            search = new HotelsucheErweitert(this.retrieval);
-        } else {
-            System.out.println(dateformatter.format(System.currentTimeMillis())+": Kein valider Suchmodus, fahre mit aktuellem Modus fort");
-        }
+        System.out.println(dateformatter.format(System.currentTimeMillis())+": Die Methode setSearch der HotelRetrieval-Klasse wurde auf den Modus "+mode+" gesetzt.");
+        retrieval.setSearch(mode);
 
     }
-
 
     public Hotel[] getHotelByName(String name) {
         System.out.println(dateformatter.format(System.currentTimeMillis())+": Zugriff auf das Buchungssystem über die Methode getHotelByName. Suchwort: "+name);
-        return this.search.getHotelByName(name);
+        return this.retrieval.getHotelByName(name);
     }
     public void openSession() {
         System.out.println(dateformatter.format(System.currentTimeMillis())+": Eröffnung einer neuen Datenbankverbindung über die Methode openSession");
-        this.search.openSession();
+        this.retrieval.openSession();
     }
 
 
