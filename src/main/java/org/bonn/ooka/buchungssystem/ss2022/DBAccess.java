@@ -2,9 +2,8 @@ package org.bonn.ooka.buchungssystem.ss2022;
 
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
+
 import org.bonn.ooka.cachecomponent.*;
 
 public class DBAccess {
@@ -64,6 +63,11 @@ public class DBAccess {
 		}
 
 		//TODO Cachingzugriff sinnvoll ergänzen
+		HashMap<String, List<Hotel>> data = new HashMap<>();
+		data.put("yeet", Arrays.asList(hotel));
+		proxy.cache(data);
+		proxy.loadCache();
+		proxy.clearCache();
 
 	}
 	

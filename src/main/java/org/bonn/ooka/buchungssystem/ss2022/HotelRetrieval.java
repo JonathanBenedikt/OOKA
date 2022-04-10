@@ -1,6 +1,7 @@
 package org.bonn.ooka.buchungssystem.ss2022;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -13,6 +14,16 @@ public class HotelRetrieval {
         this.cache = cache;
     }
     public HotelRetrieval(){
+    }
+
+    public void cache(HashMap<String, List<Hotel>> data){
+        cache.cache(data);
+    }
+    public void clearCache(){
+        cache.clear();
+    }
+    public HashMap<String, List<Hotel>> loadCache(){
+        return cache.load();
     }
 
     public Hotel[] getHotelByName(String name) {

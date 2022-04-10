@@ -7,6 +7,10 @@ import java.util.List;
 public class CachePort<C> implements Caching<C> {
     private Cache<C> cache;
 
+    public CachePort() {
+        this.cache = new Cache<>();
+    }
+
     @Override
     public void cache(HashMap<String, List<C>> data) {
         this.cache.cache(data);
