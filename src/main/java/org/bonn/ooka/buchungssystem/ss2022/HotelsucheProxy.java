@@ -12,7 +12,7 @@ public class HotelsucheProxy implements Hotelsuche{
         this.retrieval = new HotelRetrieval(cache);
     }
     public HotelsucheProxy(){
-        this.retrieval = new HotelRetrieval();
+        this.retrieval = new HotelRetrieval(new defaultCache());
     }
 
 

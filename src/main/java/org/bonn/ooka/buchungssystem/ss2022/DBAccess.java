@@ -69,6 +69,10 @@ public class DBAccess {
 		proxy.loadCache();
 		proxy.clearCache();
 
+		HotelsucheProxy cachelos = new HotelsucheProxy();
+		cachelos.clearCache();
+		cachelos.loadCache();
+		cachelos.cache(null);
 	}
 	
 	public void openConnection(){
