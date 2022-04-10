@@ -57,6 +57,8 @@ public class HotelRetrieval {
         return hotelResult.toArray(hotelResultArray);
     }
 
+
+
     public void openSession()
     {
         if(access == null)
