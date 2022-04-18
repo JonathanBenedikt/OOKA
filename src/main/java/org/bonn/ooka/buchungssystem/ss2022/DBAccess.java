@@ -20,7 +20,40 @@ public class DBAccess {
 		
 	} 
 
-	public static void main(String[] args) {
+	@Start
+	public static void start(){
+		CachePort<Hotel> hotelcache = new CachePort<>();
+
+
+		HotelsucheProxy proxy = new HotelsucheProxy(hotelcache);
+		Hotel[] hotel = proxy.getHotelByName("Jahres");
+		for(Hotel h : hotel)
+		{
+			System.out.println(h.id);
+			System.out.println(h.hotelname);
+			System.out.println(h.ort);
+		}
+
+		//TODO Cachingzugriff sinnvoll ergänzen
+		HashMap<String, List<Hotel>> data = new HashMap<>();
+		data.put("yeet", Arrays.asList(hotel));
+		proxy.cache(data);
+		proxy.loadCache();
+		proxy.clearCache();
+
+		HotelsucheProxy cachelos = new HotelsucheProxy();
+		cachelos.clearCache();
+		cachelos.loadCache();
+		cachelos.cache(null);
+		stop();
+	}
+
+	@Stop
+	public static void stop(){
+
+	}
+
+	//public static void main(String[] args) {
 		/*
 		DBAccess acc = new DBAccess();
 		System.out.println("Mini-Tutorial der Klasse DBAccess" );
@@ -50,30 +83,8 @@ public class DBAccess {
 
 
 		//Cachetest
-		CachePort<Hotel> hotelcache = new CachePort<>();
 
-
-		HotelsucheProxy proxy = new HotelsucheProxy(hotelcache);
-		Hotel[] hotel = proxy.getHotelByName("Jahres");
-		for(Hotel h : hotel)
-		{
-			System.out.println(h.id);
-			System.out.println(h.hotelname);
-			System.out.println(h.ort);
-		}
-
-		//TODO Cachingzugriff sinnvoll ergänzen
-		HashMap<String, List<Hotel>> data = new HashMap<>();
-		data.put("yeet", Arrays.asList(hotel));
-		proxy.cache(data);
-		proxy.loadCache();
-		proxy.clearCache();
-
-		HotelsucheProxy cachelos = new HotelsucheProxy();
-		cachelos.clearCache();
-		cachelos.loadCache();
-		cachelos.cache(null);
-	}
+	//}
 	
 	public void openConnection(){
 		  try {
