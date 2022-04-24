@@ -1,5 +1,7 @@
 package org.bonn.ooka.LZU;
 
+import org.bonn.ooka.buchungssystem.ss2022.Start;
+
 import javax.print.DocFlavor;
 import java.net.URL;
 import java.nio.file.Files;
@@ -25,7 +27,13 @@ public class Main {
 
                     if(Files.exists(path)){
                         // Try to start the found file
-                        threadManager.startThread(path);
+
+
+                        Component componentToStart = new Component(threadManager.idCounter++,path);
+                        threadManager.startComponentInThread(componentToStart);
+                        System.out.println("Component for the jar-path "+path.toString()+" has been created and started.");
+                        //threadManager.startThread(path);
+
 
                     }else {
                         System.out.println("No valid file has been found.");
@@ -43,6 +51,8 @@ public class Main {
                 } else if (input.equals("exit")) {
                     System.out.println("Goodbye ;)");
                     return;
+                } else if (input.equals("show")){
+                    threadManager.showManagedComponents();
                 }
                 else {
                     System.out.println("Invalid input please try again");

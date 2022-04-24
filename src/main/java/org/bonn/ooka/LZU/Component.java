@@ -1,5 +1,6 @@
 package org.bonn.ooka.LZU;
 
+import javax.print.DocFlavor;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -15,19 +16,37 @@ public class Component implements Runnable{
     private String state;
     private boolean running;
     private Path jar_path;
+    private URLClassLoader classLoader;
 
-    public Component(Path jar_path){
+    public Component(int iD, Path jar_path){
+        this.iD = iD;
         this.jar_path = jar_path;
     }
 
-    private void load_class(Path pathToJar) {
+    public int getID(){
+        return this.iD;
+    }
+
+    public String getState(){
+        return this.state;
+    }
+
+    public boolean isRunning(){
+        return this.running;
+    }
+
+    public String getPath(){
+        return this.jar_path.toString();
+    }
+
+    private void load_class() {
         //Todo nachbessern, wo der Fehler behandelt wird. Designtechnisch besser im Userinterface?
         try{
-            JarFile jarFile = new JarFile(String.valueOf(pathToJar));
+            JarFile jarFile = new JarFile(String.valueOf(jar_path));
             Enumeration<JarEntry> e = jarFile.entries();
 
-            URL[] urls = { new URL("jar:file:" + pathToJar+"!/") };
-            URLClassLoader cl = URLClassLoader.newInstance(urls);
+            URL[] url = { new URL("jar:file:" + jar_path+"!/") };
+            classLoader = new URLClassLoader(url);
 
             while (e.hasMoreElements()) {
                 JarEntry je = e.nextElement();
@@ -37,7 +56,7 @@ public class Component implements Runnable{
                 // -6 because of .class
                 String className = je.getName().substring(0,je.getName().length()-6);
                 className = className.replace('/', '.');
-                Class c = cl.loadClass(className);
+                Class c = classLoader.loadClass(className);
 
                 //@start ueber relection aufrufen
             }
@@ -53,7 +72,8 @@ public class Component implements Runnable{
     @Override
     public void run() {
         //Todo load_class aufrufen
-        System.out.println("I'm alive!");
+        this.state = "Starting";
+        load_class();
         return;
     }
 
