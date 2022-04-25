@@ -21,7 +21,7 @@ public class Component implements Runnable{
     private String state;
     private boolean running;
     private Path jar_path;
-    private URLClassLoader classLoader;
+    private CustomClassLoader classLoader;
 
     private LinkedList<Class> classes;
 
@@ -48,31 +48,8 @@ public class Component implements Runnable{
 
     private void load_class() {
         //Todo nachbessern, wo der Fehler behandelt wird. Designtechnisch besser im Userinterface?
-        try{
-            JarFile jarFile = new JarFile(String.valueOf(jar_path));
-            Enumeration<JarEntry> e = jarFile.entries();
-
-            URL[] url = { new URL("jar:file:" + jar_path+"!/") };
-            classLoader = new URLClassLoader(url);
-
-            while (e.hasMoreElements()) {
-                JarEntry je = e.nextElement();
-                if(je.isDirectory() || !je.getName().endsWith(".class")){
-                    continue;
-                }
-                // -6 because of .class
-                String className = je.getName().substring(0,je.getName().length()-6);
-                className = className.replace('/', '.');
-                Class c = classLoader.loadClass(className);
-                this.classes.addLast(c);
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+     classLoader = new CustomClassLoader(Thread.currentThread().getContextClassLoader());
+     classLoader.loadJar(this.jar_path.toString());
     }
 
 
