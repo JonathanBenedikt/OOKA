@@ -53,7 +53,16 @@ public class ThreadManager {
     }
 
     public void stopThread() {
+    }
 
+    public void stopComponent(int id){
+        for(Component aComponent : this.worker){
+            if(aComponent.getID() == id) {
+                //Stoppen
+                return;
+            }
+        }
+        // Muessten hier nen Fehler werfen, falls die Uebergeben ID nicht vorhanden ist.
     }
 
 }
