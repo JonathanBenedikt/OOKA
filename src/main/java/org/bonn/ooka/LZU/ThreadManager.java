@@ -24,29 +24,10 @@ public class ThreadManager {
     this.worker = new LinkedList<>();
     }
 
-    private static void runMethodsWithAnnotation(Class<? extends Annotation> annotation) throws Exception{
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forJavaClassPath())
-                .setScanners(new MethodAnnotationsScanner()));
-
-        Set<Method> methods = reflections.getMethodsAnnotatedWith(annotation);
-
-        for (Method m : methods) {
-            m.invoke(null);
-        }
-
-    }
-
     public void startComponentInThread(Component component){
         worker.add(component);
         Thread thread = new Thread(component);
         thread.start();
-        try {
-            runMethodsWithAnnotation(Start.class);
-        }catch (Exception ex)
-        {
-
-        }
     }
 
     public void showManagedComponents(){
