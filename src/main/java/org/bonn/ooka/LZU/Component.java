@@ -4,6 +4,7 @@ import org.bonn.ooka.buchungssystem.ss2022.Start;
 import org.bonn.ooka.buchungssystem.ss2022.Stop;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -22,7 +23,6 @@ public class Component implements Runnable{
     private boolean running;
     private Path jar_path;
     private CustomClassLoader classLoader;
-
     private LinkedList<Class> classes;
 
     public Component(int iD, Path jar_path){
@@ -49,7 +49,7 @@ public class Component implements Runnable{
     private void load_class() {
         //Todo nachbessern, wo der Fehler behandelt wird. Designtechnisch besser im Userinterface?
      classLoader = new CustomClassLoader(Thread.currentThread().getContextClassLoader());
-     classLoader.loadJar(this.jar_path.toString());
+     classes = classLoader.loadJar(this.jar_path.toString());
     }
 
 
@@ -79,11 +79,13 @@ public class Component implements Runnable{
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
+        } catch(Exception e){
+            throw new RuntimeException(e);
         }
     }
 
     private void stopComponent() {
-        Method method = getAnnotatedMethod(Start.class);
+        Method method = getAnnotatedMethod(Stop.class);
         //TODO Persistierung?
         try {
             method.invoke(null);
@@ -91,12 +93,16 @@ public class Component implements Runnable{
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e);
+        } catch(Exception e){
+            throw new RuntimeException(e);
         }
     }
 
-    private Method getAnnotatedMethod(Class annotation){
+    private Method getAnnotatedMethod(Class<? extends Annotation> annotation) {
+
         for (Class aClass : this.classes) {
             for (final Method method: aClass.getDeclaredMethods()) {
+
                 if(method.isAnnotationPresent(annotation)) {
                     return method;
                 }
