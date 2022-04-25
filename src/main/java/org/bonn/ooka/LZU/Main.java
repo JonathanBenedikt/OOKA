@@ -24,11 +24,8 @@ public class Main {
                 if (matcher_start.find()){
                     input = input.replace("start ","");
                     Path path = Paths.get(input);
-
                     if(Files.exists(path)){
                         // Try to start the found file
-
-
                         Component componentToStart = new Component(threadManager.idCounter++,path);
                         threadManager.startComponentInThread(componentToStart);
                         System.out.println("Component for the jar-path "+path.toString()+" has been created and started.");
@@ -53,8 +50,7 @@ public class Main {
                     return;
                 } else if (input.equals("show")){
                     threadManager.showManagedComponents();
-                }
-                else {
+                } else {
                     System.out.println("Invalid input please try again");
                 }
             }
