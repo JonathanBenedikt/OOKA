@@ -1,6 +1,4 @@
 package org.bonn.ooka.LZU;
-
-
 import org.bonn.ooka.buchungssystem.ss2022.Start;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
@@ -42,7 +40,7 @@ public class ThreadManager {
         Thread thread = new Thread(component);
         thread.start();
         try {
-            runMethodsWithAnnotation(Start.class);
+            //runMethodsWithAnnotation(Start.class);
         }catch (Exception ex)
         {
 
@@ -51,7 +49,7 @@ public class ThreadManager {
 
     public void showManagedComponents(){
         System.out.println("List of the currently managed Components by the LZU: ");
-        System.out.println("ID\t\tState\t\tPath");
+        System.out.println("ID\t\tState\t\t\tPath");
         for(Component component : worker){
             System.out.println(component.getID()+"\t\t"+component.getState()+"\t\t"+component.getPath());
         }

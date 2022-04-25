@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.Enumeration;
+import java.util.LinkedList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -16,11 +17,13 @@ public class Component implements Runnable{
     private String state;
     private boolean running;
     private Path jar_path;
-    private URLClassLoader classLoader;
+    private CustomClassLoader classLoader;
+    private LinkedList<Class> loadedClasses;
 
     public Component(int iD, Path jar_path){
         this.iD = iD;
         this.jar_path = jar_path;
+        this.loadedClasses = new LinkedList<>();
     }
 
     public int getID(){
@@ -41,34 +44,16 @@ public class Component implements Runnable{
 
     private void load_class() {
         //Todo nachbessern, wo der Fehler behandelt wird. Designtechnisch besser im Userinterface?
-        try{
-            JarFile jarFile = new JarFile(String.valueOf(jar_path));
-            Enumeration<JarEntry> e = jarFile.entries();
-
-            URL[] url = { new URL("jar:file:" + jar_path+"!/") };
-            classLoader = new URLClassLoader(url);
-
-            while (e.hasMoreElements()) {
-                JarEntry je = e.nextElement();
-                if(je.isDirectory() || !je.getName().endsWith(".class")){
-                    continue;
-                }
-                // -6 because of .class
-                String className = je.getName().substring(0,je.getName().length()-6);
-                className = className.replace('/', '.');
-                Class c = classLoader.loadClass(className);
-
-                //@start ueber relection aufrufen
-            }
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        classLoader = new CustomClassLoader(Thread.currentThread().getContextClassLoader());
+        classLoader.loadJar(this.jar_path.toString());
     }
 
+    public void printLoadedClasses(){
+        System.out.println("For the component with the ID "+iD+", the following classes are loaded:");
+        for(Class c : loadedClasses){
+            System.out.println("Class with the name "+c.getName());
+        }
+    }
     @Override
     public void run() {
         //Todo load_class aufrufen
