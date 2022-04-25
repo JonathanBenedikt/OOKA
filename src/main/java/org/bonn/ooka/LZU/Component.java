@@ -1,14 +1,9 @@
 package org.bonn.ooka.LZU;
 
 import org.bonn.ooka.buchungssystem.ss2022.Start;
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+import org.bonn.ooka.buchungssystem.ss2022.Stop;
 
-import javax.print.DocFlavor;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -17,7 +12,6 @@ import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.LinkedList;
-import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -101,19 +95,37 @@ public class Component implements Runnable{
      * Calls startmethod from loaded Classes at runtime via reflections.
      */
     private void startComponent() {
+        Method method = getAnnotatedMethod(Start.class);
+        try {
+            method.invoke(null);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void stopComponent() {
+        Method method = getAnnotatedMethod(Start.class);
+        //TODO Persistierung?
+        try {
+            method.invoke(null);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private Method getAnnotatedMethod(Class annotation){
         for (Class aClass : this.classes) {
             for (final Method method: aClass.getDeclaredMethods()) {
-                if(method.isAnnotationPresent(Start.class)) {
-                    try {
-                        method.invoke(null);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    } catch (InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
+                if(method.isAnnotationPresent(annotation)) {
+                    return method;
                 }
             }
         }
+        return null;
     }
 
     /***
@@ -123,6 +135,7 @@ public class Component implements Runnable{
      *
      */
     public void kill(){
+        stopComponent();
         return;
     }
 
