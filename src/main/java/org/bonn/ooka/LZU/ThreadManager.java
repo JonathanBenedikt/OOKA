@@ -15,6 +15,10 @@ import java.nio.file.Path;
 import java.util.LinkedList;
 import java.util.Set;
 
+/***
+ * TODO HIER WEITER MACHEN: AUFTEILEN VON BYTECODE LOADEN und STARTEN, STATES, KILLEN (Achtung Increments/Decrements von ID), UNIT/Integration Tests
+ */
+
 public class ThreadManager {
 
     private LinkedList<Component> worker;
@@ -24,8 +28,22 @@ public class ThreadManager {
     this.worker = new LinkedList<>();
     }
 
-    public void startComponentInThread(Component component){
-        worker.add(component);
+    public void syncLoadedComponent(Component component){
+        this.worker.add(component);
+        return;
+    }
+
+    private Component getComponent(int id){
+        for(Component aComponent : this.worker){
+            if(aComponent.getID() == id) {
+                return aComponent;
+            }
+        }
+        return null;
+    }
+
+    public void startComponent(int id){
+        Component component = getComponent(id);
         Thread thread = new Thread(component);
         thread.start();
     }
@@ -38,31 +56,15 @@ public class ThreadManager {
         }
     }
 
-    public void startThread(Path pathToClass) {
-        Component component= new Component(idCounter++,pathToClass);
-        Thread thread = new Thread(component);
-
-        thread.start();
-        thread.interrupt();
-
-        System.out.println(thread.getState());
-        System.out.println(thread.isAlive());
-        System.out.println(thread.getId());
-        System.out.println(thread.getState());
-
-    }
 
     public void stopThread() {
     }
 
     public void stopComponent(int id){
-        for(Component aComponent : this.worker){
-            if(aComponent.getID() == id) {
-                //Stoppen
-                return;
-            }
-        }
-        // Muessten hier nen Fehler werfen, falls die Uebergeben ID nicht vorhanden ist.
+        Component component = getComponent(id);
+        component.stopComponent();
+        this.worker.remove(component);
+        return;
     }
 
 }

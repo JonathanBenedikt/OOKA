@@ -46,13 +46,6 @@ public class Component implements Runnable{
         return this.jar_path.toString();
     }
 
-    private void load_class() {
-        //Todo nachbessern, wo der Fehler behandelt wird. Designtechnisch besser im Userinterface?
-     classLoader = new CustomClassLoader(Thread.currentThread().getContextClassLoader());
-     classes = classLoader.loadJar(this.jar_path.toString());
-    }
-
-
 
     @Override
     /***
@@ -63,9 +56,16 @@ public class Component implements Runnable{
     public void run() {
         //Todo load_class aufrufen
         this.state = "Starting";
-        load_class();
         startComponent();
+        this.state = "Running";
         return;
+    }
+
+    void load_component() {
+        //Todo nachbessern, wo der Fehler behandelt wird. Designtechnisch besser im Userinterface?
+        this.classLoader = new CustomClassLoader(Thread.currentThread().getContextClassLoader());
+        this.classes = classLoader.loadJar(this.jar_path.toString());
+        this.state = "Loaded";
     }
 
     /***
@@ -84,9 +84,8 @@ public class Component implements Runnable{
         }
     }
 
-    private void stopComponent() {
+    void stopComponent() {
         Method method = getAnnotatedMethod(Stop.class);
-        //TODO Persistierung?
         try {
             method.invoke(null);
         } catch (IllegalAccessException e) {
@@ -99,10 +98,8 @@ public class Component implements Runnable{
     }
 
     private Method getAnnotatedMethod(Class<? extends Annotation> annotation) {
-
         for (Class aClass : this.classes) {
             for (final Method method: aClass.getDeclaredMethods()) {
-
                 if(method.isAnnotationPresent(annotation)) {
                     return method;
                 }
@@ -111,23 +108,4 @@ public class Component implements Runnable{
         return null;
     }
 
-    /***
-     * Kill component
-     * TODO Persist state of component
-     * TODO dereference classes so garbage collector collects everything
-     *
-     */
-    public void kill(){
-        stopComponent();
-        return;
-    }
-
-    /*ToDO:
-    Übergangsfunktionen States
-    ClassLoader
-    Backup-Mechanismus
-    Start- und Stop-Möglichkeiten
-    ID
-    Packages
-     */
 }
