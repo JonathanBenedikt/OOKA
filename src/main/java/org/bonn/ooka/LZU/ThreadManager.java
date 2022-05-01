@@ -68,8 +68,13 @@ public class ThreadManager {
     public void stopComponent(int id){
         Component component = getComponent(id);
         component.stopComponent();
-        this.worker.remove(component);
+        //this.worker.remove(component);
         return;
+    }
+
+    public void deleteComponent(int id){
+        stopComponent(id);
+        this.worker.remove(getComponent(id));
     }
 
 }

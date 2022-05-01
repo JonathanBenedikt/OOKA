@@ -18,12 +18,16 @@ public class Main {
         Pattern pattern_start = Pattern.compile("start ", Pattern.CASE_INSENSITIVE);
         Pattern pattern_stop = Pattern.compile("stop ", Pattern.CASE_INSENSITIVE);
         Pattern pattern_load = Pattern.compile("load ", Pattern.CASE_INSENSITIVE);
+        Pattern pattern_delete = Pattern.compile("delete ", Pattern.CASE_INSENSITIVE);
+
         while(true){
             if (scanner.hasNext()){
                 String input = scanner.nextLine();
                 Matcher matcher_start = pattern_start.matcher(input);
                 Matcher matcher_stop = pattern_stop.matcher(input);
                 Matcher matcher_load = pattern_load.matcher(input);
+                Matcher matcher_delete = pattern_delete.matcher(input);
+
                 if(matcher_load.find()){
                     input = input.replace("load ","");
                     Path path = Paths.get(input);
@@ -50,6 +54,17 @@ public class Main {
                         stop.execute();
                     }
                     catch (NumberFormatException e) {
+                        System.out.println("No Component under the ID: " + input);
+                    }
+                }
+                else if(matcher_delete.find()){
+                    input = input.replace("delete ","");
+                    int id;
+                    try {
+                        id = Integer.parseInt(input);
+                        Command delete = new DeleteCommand(threadManager, id);
+                        delete.execute();
+                    }  catch (NumberFormatException e) {
                         System.out.println("No Component under the ID: " + input);
                     }
                 }
