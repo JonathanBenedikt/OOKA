@@ -10,6 +10,7 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,12 +21,15 @@ class ThreadManagerTest {
     private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
     private final PrintStream originalOut = System.out;
     private final PrintStream originalErr = System.err;
+    Path path;
 
     @BeforeEach
     void setUp() {
+        // Arrange
         threadManager = new ThreadManager();
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
+        path = Paths.get("./target/codesOOKA-1.0-SNAPSHOT.jar");
     }
 
     @AfterEach
@@ -35,38 +39,80 @@ class ThreadManagerTest {
     }
 
     @Test
-    void startComponentInThread() {
+    void syncLoadedComponent(){
         // Arrange
-        Component testComponent = new Component(1, Paths.get("./target/codesOOKA-1.0-SNAPSHOT.jar"));
+        Component testComponent = new Component(20,path);
         // Act
-        //threadManager.startComponentInThread(testComponent);
-        threadManager.startComponent(1);
+        testComponent.load_component();
+        threadManager.syncLoadedComponent(testComponent);
         // Assert
+        assertEquals("Loaded",threadManager.getStateForComponent(20));
+    }
 
-        // assertEquals("Running",testComponent.getState());
+    @Test
+    void LoadCommand(){
+         // Arrange
+        Command load = new LoadCommand(threadManager, path);
+        // Act
+        load.execute();
+        // Assert
+        assertEquals("Loaded",threadManager.getStateForComponent(1));
+    }
+
+    @Test
+    void StartCommand() {
+        // Act
+        Command load = new LoadCommand(threadManager, path);
+        load.execute();
+        Command start = new StartCommand(threadManager, 1);
+        start.execute();
+        // Assert
+        assertEquals("Starting",threadManager.getStateForComponent(1));
+    }
+
+
+    @Test
+    void stopCommmand(){
+        // Arrange
+        String expectedOutput = "List of the currently managed Components by the LZU: \n" +
+                "ID\t\tState\t\tPath\n";
+        // Act & Assert
+        Command load = new LoadCommand(threadManager, path);
+        load.execute();
+        assertEquals("Loaded",threadManager.getStateForComponent(1));
+
+        Command stop = new StopCommand(threadManager, 1);
+        stop.execute();
+
+        outContent.reset();
+        threadManager.showManagedComponents();
+        assertEquals(expectedOutput,outContent.toString());
 
     }
 
     @Test
-    void showManagedComponents() {
+    void showCommand() {
         // Arrange
-        Path examplePath = Paths.get("./target/codesOOKA-1.0-SNAPSHOT.jar");
+        Command show = new ShowCommand(threadManager);
         Random rand = new Random();
         int componentCount = rand.nextInt(10);
         String expectedOutput = "List of the currently managed Components by the LZU: \n" +
                 "ID\t\tState\t\tPath\n";
 
-        for(int i = 0; i<componentCount; i++){
-            Component testComponent = new Component(i, examplePath );
-            threadManager.startComponent(i);
+        for(int i = 1; i<=componentCount; i++){
+            Command load = new LoadCommand(threadManager, path);
+            load.execute();
+            Command start = new StartCommand(threadManager, i);
+            start.execute();
+
             expectedOutput +=
-                    i+"\t\tStarting\t\t"+examplePath+"\n";
+                    i+"\t\tStarting\t\t"+path+"\n";
         }
         // Act
         outContent.reset();
-        threadManager.showManagedComponents();
+        show.execute();
         // Assert
-        assertEquals(outContent.toString(), expectedOutput);
+        assertEquals(expectedOutput,outContent.toString());
     }
 
 

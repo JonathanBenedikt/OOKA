@@ -1,7 +1,5 @@
 package org.bonn.ooka.LZU;
 
-import org.bonn.ooka.LZU.Component;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,51 +15,62 @@ class ComponentTest {
     Component testComponent;
     Random rand;
     int id;
+    Path path;
 
-    @Test
-    void run() {
-    }
 
     @BeforeEach
     void setUp() {
-      rand = new Random();
+    // Arrange
+        rand = new Random();
       id = rand.nextInt();
-      Path jar_path = Paths.get("./target/codesOOKA-1.0-SNAPSHOT.jar");
-      testComponent = new Component(id,jar_path);
-    }
-
-    @AfterEach
-    void tearDown() {
+      path = Paths.get("./target/codesOOKA-1.0-SNAPSHOT.jar");
+      testComponent = new Component(id,path);
     }
 
     @Test
-    void getID() {
-       assertTrue(testComponent.getID() == this.id);
+    void getID(){
+        // Assert
+        assertEquals(id, testComponent.getID());
     }
 
     @Test
-    void getState() {
-        assertTrue(testComponent.getState() == "Running");
+    void getPath(){
+        // Assert
+        assertEquals(path.toString(), testComponent.getPath());
     }
 
     @Test
-    void isRunning() {
-        assertTrue(testComponent.isRunning() == true);
+    void getState(){
+        // Assert
+        assertEquals( "Initializing", testComponent.getState());
     }
 
     @Test
-    void getPath() {
-        assertTrue(testComponent.getPath() == "./target/codesOOKA-1.0-SNAPSHOT.jar");
+    void loadComponent(){
+        // Act
+        testComponent.load_component();
+        // Assert
+        assertEquals("Loaded",testComponent.getState());
     }
 
     @Test
-    void testRun() {
-
+    void runComponent(){
+        // Act
+        testComponent.load_component();
+        testComponent.run();
+        // Assert
+        assertEquals("Running",testComponent.getState());
     }
 
     @Test
-    void kill() {
-        //testComponent.kill();
-        assertTrue(testComponent.isRunning() == false);
+    void stopComponent(){
+        // Act
+        testComponent.load_component();
+        testComponent.run();
+        testComponent.stopComponent();
+        // Assert
+        assertEquals("Stopped",testComponent.getState());
     }
+
+
 }

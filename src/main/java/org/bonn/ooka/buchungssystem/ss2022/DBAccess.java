@@ -1,6 +1,7 @@
 package org.bonn.ooka.buchungssystem.ss2022;
 
 
+import java.lang.annotation.Annotation;
 import java.sql.*;
 import java.util.*;
 
@@ -20,7 +21,7 @@ public class DBAccess {
 		
 	} 
 
-	@Start
+	@Start()
 	public static void start(){
 		CachePort<Hotel> hotelcache = new CachePort<>();
 

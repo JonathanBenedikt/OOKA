@@ -28,6 +28,11 @@ public class ThreadManager {
     this.worker = new LinkedList<>();
     }
 
+    public String getStateForComponent(int id){
+        Component selectedComponent = getComponent(id);
+        return selectedComponent.getState();
+    }
+
     public void syncLoadedComponent(Component component){
         this.worker.add(component);
         return;

@@ -20,7 +20,6 @@ public class Component implements Runnable{
 
     private int iD;
     private String state;
-    private boolean running;
     private Path jar_path;
     private CustomClassLoader classLoader;
     private LinkedList<Class> classes;
@@ -28,6 +27,7 @@ public class Component implements Runnable{
     public Component(int iD, Path jar_path){
         this.iD = iD;
         this.jar_path = jar_path;
+        this.state = "Initializing";
     }
 
     public int getID(){
@@ -36,10 +36,6 @@ public class Component implements Runnable{
 
     public String getState(){
         return this.state;
-    }
-
-    public boolean isRunning(){
-        return this.running;
     }
 
     public String getPath(){
@@ -63,9 +59,15 @@ public class Component implements Runnable{
 
     void load_component() {
         //Todo nachbessern, wo der Fehler behandelt wird. Designtechnisch besser im Userinterface?
-        this.classLoader = new CustomClassLoader(Thread.currentThread().getContextClassLoader());
-        this.classes = classLoader.loadJar(this.jar_path.toString());
-        this.state = "Loaded";
+        try {
+            this.classLoader = new CustomClassLoader(new URL[]{new URL("file://"+jar_path.toString())}, Thread.currentThread().getContextClassLoader());
+            this.classes = classLoader.loadJar();
+            this.state = "Loaded";
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        //this.classes = classLoader.loadJar(this.jar_path.toString());
+
     }
 
     /***
@@ -88,6 +90,7 @@ public class Component implements Runnable{
         Method method = getAnnotatedMethod(Stop.class);
         try {
             method.invoke(null);
+            this.state = "Stopped";
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         } catch (InvocationTargetException e) {
@@ -98,7 +101,7 @@ public class Component implements Runnable{
     }
 
     private Method getAnnotatedMethod(Class<? extends Annotation> annotation) {
-        for (Class aClass : this.classes) {
+        for (Class aClass : classes) {
             for (final Method method: aClass.getDeclaredMethods()) {
                 if(method.isAnnotationPresent(annotation)) {
                     return method;

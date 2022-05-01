@@ -1,5 +1,6 @@
 package org.bonn.ooka.LZU;
 
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
@@ -9,6 +10,9 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args){
         ThreadManager threadManager = new ThreadManager();
+
+        //File file = new File("file://target/codesOOKA-1.0-SNAPSHOT.jar/target/classes/org/bonn/ooka/cachecomponent/Cache.class");
+        //System.out.println(file.exists());
 
         Scanner scanner = new Scanner(System.in);
         Pattern pattern_start = Pattern.compile("start ", Pattern.CASE_INSENSITIVE);
