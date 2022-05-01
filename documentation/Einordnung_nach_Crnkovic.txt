@@ -1,22 +1,23 @@
 Unsere Komponentenmodell erfüllt nach Crnkovic folgende Bereiche:
 Lifecycle:
-	- Implementation, durch das vorschreiben der Programmiersprache Java und der @Start und @Stop Methode
-	- Packaging, durch das wir auf Bytecode im JAR-Format bestehen.
-	- Deployment, at run-time da wir die Komponenten dynamisch einbinden und rauswerfen können.
+	- Implementation ist durch das vorschreiben der Programmiersprache Java und der @Start und @Stop Methode umgesetzt
+	- Packaging ist dadurch umgesetzt, dass wir auf Bytecode im JAR-Format bestehen.
+	- Deployment ist als "at run-time" umgesetzt, da wir die Komponenten dynamisch einbinden und rauswerfen können.
 
 Construction: 
 	- Interface Specification:
-		- Operational Interface: Da wir Java Interface Classes benutzen
-		- Trennung von Requested/Provided (?)
-		- Direkt in Programming Language (Java) Definiert.
-		- Bin mir nicht sicher ob Bytecode, als das selbe wie MS COM gilt
-			- Static semantic level: Java hat starke typisierung
-			- Functional Semantic level: Nur begrenzt durch die Limits der Datentypen
-			- behavior level: gegeben durch unsere States.
+		- Operational Interface: Da wir Java Interfaces verwenden.
+		- Trennung von Requested/Provided, ist aktuell nicht implementiert, könnte allerdings noch erweitert werden.
+		- Die Interfacelanguage ist direkt in Programming Language (Java) 
+definiert.
+		- Static semantic level: Java hat starke typisierung
+		- Functional Semantic level: Nur begrenzt durch die Limits der Datentypen
+		- behavior level: gegeben durch unsere States.
 	- Binding
-		- Aktuell ist Horizontal binding nicht möglich ebensowenig wie vertical binding. Aber im Rahmen von Microservices wäre Horizontal sinnvoller. 
-		- Aktuell ebenfalls nicht implementiert, allerdings wäre es sinnvoll exogenous binding zu 			verwenden, um eine Trennung der Verantwortlichkeite zu gewährleisten.
-	- Communication Style: 
-		- ähnlich wie Binding noch nicht spezifiziert
-		- Communication Style: aktuell nur synchron möglich
-		- Interaction Style: aktive Components, starten einmal und laufen dann selbständig in Thread.
+		- Aktuell ist Horizontal binding nicht möglich ebensowenig wie vertical binding.
+		- Aktuell ebenfalls nicht implementiert, ist die Composition. allerdings wäre es sinnvoll exogenous binding zu verwenden, um eine Trennung der Verantwortlichkeit zu gewährleisten.
+	- Interactions: 
+		- ähnlich wie Binding noch nicht spezifiziert.
+		- Communication Style: aktuell nur synchron möglich, asynchron wäre denkbar.
+		- Interaction Style ist aktuell als active Components umgesetzt, da wir diese einmal starten und dann laufen lassen. 
+
