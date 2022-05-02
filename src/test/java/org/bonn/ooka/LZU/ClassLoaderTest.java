@@ -24,10 +24,6 @@ class ClassLoaderTest {
         classList = new LinkedList<>();
     }
 
-    @AfterEach
-    void tearDown() {
-    }
-
     @Test
     void loadJar() {
         // Act
@@ -66,8 +62,6 @@ class ClassLoaderTest {
 
 
     }
-
-
 
     @Test
     void classLoaderExceptions(){

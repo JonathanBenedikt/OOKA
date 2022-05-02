@@ -67,13 +67,21 @@ public class ThreadManager {
 
     public void stopComponent(int id){
         Component component = getComponent(id);
-        component.stopComponent();
+        if(component.getState() == "Running") {
+            component.stopComponent();
+        }
         //this.worker.remove(component);
         return;
     }
 
     public void deleteComponent(int id){
-        stopComponent(id);
+        try {
+            stopComponent(id);
+        }catch (Exception ex)
+        {
+            System.out.println("Component with ID "+id+" could not be stopped properly");
+            ex.printStackTrace();
+        }
         this.worker.remove(getComponent(id));
     }
 

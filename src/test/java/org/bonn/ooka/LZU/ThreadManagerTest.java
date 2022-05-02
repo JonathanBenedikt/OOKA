@@ -29,7 +29,7 @@ class ThreadManagerTest {
         threadManager = new ThreadManager();
         System.setOut(new PrintStream(outContent));
         System.setErr(new PrintStream(errContent));
-        path = Paths.get("./target/codesOOKA-1.0-SNAPSHOT.jar");
+        path = Paths.get("Please insert full path to a .jar-file.");
     }
 
     @AfterEach
@@ -70,6 +70,23 @@ class ThreadManagerTest {
         assertEquals("Starting",threadManager.getStateForComponent(1));
     }
 
+    @Test
+    void deleteCommand(){
+        // Arrange
+       String expectedOutput = "List of the currently managed Components by the LZU: \n" +
+                "ID\t\tState\t\tPath\n";
+       // Act
+        Component testComponent = new Component(1,path);
+        threadManager.syncLoadedComponent(testComponent);
+        Command deleteCommand = new DeleteCommand(threadManager, 1);
+        deleteCommand.execute();
+
+        outContent.reset();
+        threadManager.showManagedComponents();
+        // Assert
+        assertEquals(expectedOutput,outContent.toString());
+
+    }
 
     @Test
     void stopCommmand(){
