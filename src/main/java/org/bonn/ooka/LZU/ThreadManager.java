@@ -56,7 +56,9 @@ public class ThreadManager {
         if(loggerField.getType().getClass().equals(Logger.class.getClass()) ){
 
             try {
-                loggerField.set(loggerField.getClass(), new Logger());
+                loggerField.setAccessible(true);
+                loggerField.set(this, new Logger());
+
             }catch (Exception ex){
                ex.printStackTrace();
             }

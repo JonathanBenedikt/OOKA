@@ -18,7 +18,7 @@ public class DBAccess {
 	private String url = "jdbc:postgresql://dumbo.inf.h-brs.de/demouser";
 
 	@Inject
-	private Logger myLog;
+	private static Logger myLog;
 	private Connection conn;
 	
 	public DBAccess() {   
@@ -27,6 +27,8 @@ public class DBAccess {
 
 	@Start()
 	public static void start(){
+
+		myLog.sendLog("Die Komponente startet");
 		CachePort<Hotel> hotelcache = new CachePort<>();
 
 
