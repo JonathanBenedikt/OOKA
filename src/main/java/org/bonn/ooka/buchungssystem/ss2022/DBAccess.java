@@ -5,6 +5,8 @@ import java.lang.annotation.Annotation;
 import java.sql.*;
 import java.util.*;
 
+import org.bonn.ooka.LZU.Inject;
+import org.bonn.ooka.LZU.Logger;
 import org.bonn.ooka.cachecomponent.*;
 
 public class DBAccess {
@@ -14,7 +16,9 @@ public class DBAccess {
 	public final static int AUTO = 1;
 
 	private String url = "jdbc:postgresql://dumbo.inf.h-brs.de/demouser";
-	
+
+	@Inject
+	private Logger myLog;
 	private Connection conn;
 	
 	public DBAccess() {   

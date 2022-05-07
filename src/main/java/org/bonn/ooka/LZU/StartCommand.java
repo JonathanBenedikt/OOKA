@@ -12,6 +12,7 @@ public class StartCommand extends Command{
 
     @Override
     public void execute() {
+        this.receiver.injectLoggerForComponent(this.ComponentID);
         this.receiver.startComponent(this.ComponentID);
     }
 }

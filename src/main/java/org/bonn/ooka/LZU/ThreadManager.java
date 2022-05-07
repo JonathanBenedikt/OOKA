@@ -47,6 +47,26 @@ public class ThreadManager {
         return null;
     }
 
+    public void injectLoggerForComponent(int id){
+        Field loggerField = getComponent(id).getAnnotatedField(Inject.class);
+
+        if(loggerField == null )
+            return;
+
+        if(loggerField.getType().getClass().equals(Logger.class.getClass()) ){
+
+            try {
+                loggerField.set(loggerField.getClass(), new Logger());
+            }catch (Exception ex){
+               ex.printStackTrace();
+            }
+
+        }
+
+    }
+
+
+
     public void startComponent(int id){
         Component component = getComponent(id);
         Thread thread = new Thread(component);

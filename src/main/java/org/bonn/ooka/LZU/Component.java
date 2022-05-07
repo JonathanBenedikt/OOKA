@@ -5,6 +5,7 @@ import org.bonn.ooka.buchungssystem.ss2022.Stop;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -98,6 +99,17 @@ public class Component implements Runnable{
         } catch(Exception e){
             throw new RuntimeException(e);
         }
+    }
+
+    public Field getAnnotatedField(Class<? extends Annotation> annotation){
+        for (Class aClass : classes) {
+            for (final Field field: aClass.getDeclaredFields()) {
+                if(field.isAnnotationPresent(annotation)) {
+                    return field;
+                }
+            }
+        }
+        return null;
     }
 
     private Method getAnnotatedMethod(Class<? extends Annotation> annotation) {
