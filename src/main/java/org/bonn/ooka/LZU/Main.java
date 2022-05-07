@@ -68,6 +68,10 @@ public class Main {
                         System.out.println("No Component under the ID: " + input);
                     }
                 }
+                else if(input.equals("restore")){
+                    Command restore = new RestoreCommand(threadManager);
+                    restore.execute();
+                }
                 else if (input.equals("help")){
                     Command help = new HelpCommand();
                     help.execute();

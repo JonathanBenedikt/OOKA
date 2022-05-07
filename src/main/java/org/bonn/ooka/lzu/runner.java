@@ -1,4 +1,4 @@
-package org.bonn.ooka.lzu;
+package org.bonn.ooka.LZU;
 
 import java.io.IOException;
 import java.net.MalformedURLException;

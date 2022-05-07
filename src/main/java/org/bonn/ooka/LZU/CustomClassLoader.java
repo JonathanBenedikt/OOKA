@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class CustomClassLoader extends URLClassLoader{
+public class CustomClassLoader extends URLClassLoader implements Serializable{
 
     private String jar_path;
     //private ClassLoader jdkLoader;

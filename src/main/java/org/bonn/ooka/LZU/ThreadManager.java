@@ -1,17 +1,21 @@
 package org.bonn.ooka.LZU;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.bonn.ooka.buchungssystem.ss2022.Start;
 import org.reflections.Reflections;
 import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.util.ClasspathHelper;
 import org.reflections.util.ConfigurationBuilder;
 
+import java.io.*;
 import java.lang.reflect.*;
 import java.lang.annotation.Annotation;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.Set;
 
@@ -24,6 +28,7 @@ public class ThreadManager {
     private LinkedList<Component> worker;
     public int idCounter = 1;
 
+    private static final String stateFilePath = "LZU_savedStates.dat";
     public ThreadManager() {
     this.worker = new LinkedList<>();
     }
@@ -47,6 +52,65 @@ public class ThreadManager {
         return null;
     }
 
+    public void saveStatesToFile(){
+       try{
+         FileOutputStream fos = new FileOutputStream(stateFilePath,false);
+         ObjectOutputStream oos = new ObjectOutputStream(fos);
+
+         for(Component comp : worker){
+            ComponentState state = new ComponentState(comp.getID(),comp.getState(),comp.getPath().toString());
+            oos.writeObject(state);
+         }
+
+         oos.close();
+         fos.close();
+
+       }catch(Exception ex){
+           ex.printStackTrace();
+       }
+    }
+
+    public void restoreStatesFromFile(){
+        try {
+            FileInputStream fin = new FileInputStream(stateFilePath);
+            ObjectInputStream oin = new ObjectInputStream(fin);
+            worker = new LinkedList<>();
+
+            do{
+                ComponentState savedComp = (ComponentState)oin.readObject();
+                Path jar_path = Paths.get(savedComp.getJar_path());
+                Component comp = new Component(savedComp.getId(),jar_path);
+                comp.setState(savedComp.getState());
+
+                switch (comp.getState()){
+                    case "Loaded":
+                        comp.load_component();
+                        syncLoadedComponent(comp);
+                        break;
+                    case "Running":
+                        comp.load_component();
+                        syncLoadedComponent(comp);
+                        startComponent(comp.getID());
+                        break;
+                    case "Stopped":
+                        comp.load_component();
+                        comp.setState("Stopped");
+                        syncLoadedComponent(comp);
+                       break;
+                    default:
+                        break;
+                }
+                injectLoggerForComponent(comp.getID());
+            }while(fin.available() > 0);
+
+            oin.close();
+            fin.close();
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+
+    }
+
     public void injectLoggerForComponent(int id){
         Field loggerField = getComponent(id).getAnnotatedField(Inject.class);
 
@@ -54,17 +118,13 @@ public class ThreadManager {
             return;
 
         if(loggerField.getType().getClass().equals(Logger.class.getClass()) ){
-
             try {
                 loggerField.setAccessible(true);
                 loggerField.set(this, new Logger());
-
             }catch (Exception ex){
                ex.printStackTrace();
             }
-
         }
-
     }
 
 
@@ -73,6 +133,7 @@ public class ThreadManager {
         Component component = getComponent(id);
         Thread thread = new Thread(component);
         thread.start();
+        getComponent(id).setState("Running");
     }
 
     public void showManagedComponents(){
@@ -91,6 +152,9 @@ public class ThreadManager {
         Component component = getComponent(id);
         if(component.getState() == "Running") {
             component.stopComponent();
+        }
+        else{
+            component.setState("Stopped");
         }
         //this.worker.remove(component);
         return;

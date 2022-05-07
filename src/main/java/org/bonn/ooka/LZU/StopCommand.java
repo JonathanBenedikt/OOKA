@@ -10,5 +10,6 @@ public class StopCommand extends Command{
     @Override
     public void execute() {
         this.receiver.stopComponent(this.ComponentID);
+        this.receiver.saveStatesToFile();
     }
 }

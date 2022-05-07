@@ -13,6 +13,7 @@ public class HelpCommand extends Command {
         System.out.println("start [ID] - launch component with the specified ID");
         System.out.println("stop [ID] - stop component");
         System.out.println("delete [ID] - deletes the component from the LZU");
+        System.out.println("restore - restores the last saved state of the LZU");
         System.out.println("exit - stop runtime");
     }
 }

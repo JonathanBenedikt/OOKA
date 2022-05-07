@@ -4,6 +4,7 @@ import org.bonn.ooka.buchungssystem.ss2022.Start;
 import org.bonn.ooka.buchungssystem.ss2022.Stop;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +18,7 @@ import java.util.LinkedList;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-public class Component implements Runnable{
+public class Component implements Runnable, Serializable {
 
     private int iD;
     private String state;
@@ -43,6 +44,9 @@ public class Component implements Runnable{
         return this.jar_path.toString();
     }
 
+    public void setState(String state) {
+        this.state = state;
+    }
 
     @Override
     /***
@@ -52,9 +56,7 @@ public class Component implements Runnable{
      */
     public void run() {
         //Todo load_class aufrufen
-        this.state = "Starting";
         startComponent();
-        this.state = "Running";
         return;
     }
 

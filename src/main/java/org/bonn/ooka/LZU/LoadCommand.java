@@ -21,6 +21,8 @@ public class LoadCommand extends Command{
                 Component component = new Component(this.receiver.idCounter++, this.path);
                 this.receiver.syncLoadedComponent(component);
                 component.load_component();
+                this.receiver.injectLoggerForComponent(component.getID());
+                this.receiver.saveStatesToFile();
                 System.out.println("Component for the jar-path "+path.toString()+" has been loaded.");
             } catch (Exception e) {
                 this.receiver.idCounter--;
