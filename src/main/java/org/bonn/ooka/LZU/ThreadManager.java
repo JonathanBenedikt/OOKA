@@ -82,25 +82,30 @@ public class ThreadManager {
                 Component comp = new Component(savedComp.getId(),jar_path);
                 comp.setState(savedComp.getState());
 
+
+
                 switch (comp.getState()){
                     case "Loaded":
                         comp.load_component();
                         syncLoadedComponent(comp);
+                        injectLoggerForComponent(comp.getID());
                         break;
                     case "Running":
                         comp.load_component();
                         syncLoadedComponent(comp);
+                        injectLoggerForComponent(comp.getID());
                         startComponent(comp.getID());
                         break;
                     case "Stopped":
                         comp.load_component();
                         comp.setState("Stopped");
                         syncLoadedComponent(comp);
+                        injectLoggerForComponent(comp.getID());
                        break;
                     default:
                         break;
                 }
-                injectLoggerForComponent(comp.getID());
+
             }while(fin.available() > 0);
 
             oin.close();
