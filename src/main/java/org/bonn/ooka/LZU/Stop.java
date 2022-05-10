@@ -1,4 +1,4 @@
-package org.bonn.ooka.buchungssystem.ss2022;
+package org.bonn.ooka.LZU;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

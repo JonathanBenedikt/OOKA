@@ -1,23 +1,11 @@
 package org.bonn.ooka.LZU;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import org.bonn.ooka.buchungssystem.ss2022.Start;
-import org.reflections.Reflections;
-import org.reflections.scanners.MethodAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
-
 import java.io.*;
 import java.lang.reflect.*;
-import java.lang.annotation.Annotation;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.LinkedList;
-import java.util.Set;
 
 /***
  * TODO HIER WEITER MACHEN: AUFTEILEN VON BYTECODE LOADEN und STARTEN, STATES, KILLEN (Achtung Increments/Decrements von ID), UNIT/Integration Tests
