@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
@@ -67,7 +68,7 @@ class ThreadManagerTest {
         Command start = new StartCommand(threadManager, 1);
         start.execute();
         // Assert
-        assertEquals("Starting",threadManager.getStateForComponent(1));
+        assertEquals("Running",threadManager.getStateForComponent(1));
     }
 
     @Test
@@ -90,9 +91,6 @@ class ThreadManagerTest {
 
     @Test
     void stopCommmand(){
-        // Arrange
-        String expectedOutput = "List of the currently managed Components by the LZU: \n" +
-                "ID\t\tState\t\tPath\n";
         // Act & Assert
         Command load = new LoadCommand(threadManager, path);
         load.execute();
@@ -103,7 +101,8 @@ class ThreadManagerTest {
 
         outContent.reset();
         threadManager.showManagedComponents();
-        assertEquals(expectedOutput,outContent.toString());
+        assertEquals("Stopped",threadManager.getStateForComponent(1));
+
 
     }
 
@@ -123,7 +122,7 @@ class ThreadManagerTest {
             start.execute();
 
             expectedOutput +=
-                    i+"\t\tStarting\t\t"+path+"\n";
+                    i+"\t\tRunning\t\t"+path+"\n";
         }
         // Act
         outContent.reset();

@@ -3,6 +3,7 @@ package org.bonn.ooka.LZU;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -18,13 +19,30 @@ class ComponentTest {
     Path path;
 
 
+    public void loggerInjector(Component c){
+        Field loggerField = c.getAnnotatedField(Inject.class);
+
+        if(loggerField == null )
+            return;
+
+        if(loggerField.getType().getClass().equals(Logger.class.getClass()) ){
+            try {
+                loggerField.setAccessible(true);
+                loggerField.set(this, new Logger());
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+        }
+    }
+
     @BeforeEach
     void setUp() {
     // Arrange
         rand = new Random();
-      id = rand.nextInt();
-      path = Paths.get("./target/codesOOKA-1.0-SNAPSHOT.jar");
-      testComponent = new Component(id,path);
+        id = rand.nextInt();
+      //path = Paths.get("Please insert full path to a .jar-file.");
+        path = Paths.get("/home/jonathan/IdeaProjects/codesOOKA/target/codesOOKA-1.0-SNAPSHOT.jar");
+        testComponent = new Component(id,path);
     }
 
     @Test
@@ -41,7 +59,6 @@ class ComponentTest {
 
     @Test
     void getState(){
-        // Assert
         assertEquals( "Initializing", testComponent.getState());
     }
 
@@ -49,6 +66,7 @@ class ComponentTest {
     void loadComponent(){
         // Act
         testComponent.load_component();
+        loggerInjector(testComponent);
         // Assert
         assertEquals("Loaded",testComponent.getState());
     }
@@ -57,6 +75,7 @@ class ComponentTest {
     void runComponent(){
         // Act
         testComponent.load_component();
+        loggerInjector(testComponent);
         testComponent.run();
         // Assert
         assertEquals("Running",testComponent.getState());
@@ -66,6 +85,7 @@ class ComponentTest {
     void stopComponent(){
         // Act
         testComponent.load_component();
+        loggerInjector(testComponent);
         testComponent.run();
         testComponent.stopComponent();
         // Assert
